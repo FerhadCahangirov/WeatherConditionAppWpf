@@ -1,0 +1,251 @@
+﻿<Window x:Class="WeatherCondition.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WeatherCondition"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FFC8D8E4" Offset="0.45"/>
+            <GradientStop Color="White" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Window.Resources>
+        <local:DegreeConverter x:Key="degreeConverter"/>
+        <local:UriToImageConverter x:Key="uriToImageConverter"/>
+    </Window.Resources>
+    <Grid x:Name="dataGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".7*"/>
+            <ColumnDefinition Width="1.3*"/>
+
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition  Height=".4*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <!--First Column-->
+            
+            <Image Source="{Binding WeatherIcon, Converter={StaticResource uriToImageConverter}}" Stretch="Fill" Grid.ColumnSpan="2" />
+
+            <Border CornerRadius="0 50 0 30" Background="#2b6777" Grid.Row="1" Margin="0 0 0 20" Opacity=".9" Grid.ColumnSpan="2">
+                <DockPanel>
+                    <DockPanel.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#f2f2f2"/>
+                            <Setter Property="FontSize" Value="15"/>
+                        </Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Margin" Value="15"/>
+                        </Style>
+                    </DockPanel.Resources>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <TextBlock Text="Description: " DockPanel.Dock="Top"/>
+                        <TextBlock Text="{Binding WeatherDescription}" DockPanel.Dock="Top"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <TextBlock Text="Temperature: " />
+                        <TextBlock Text="{Binding Temp}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <TextBlock Text="Max Temperature: " />
+                        <TextBlock Text="{Binding TempMax}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <TextBlock Text="Min Temperature: " />
+                        <TextBlock Text="{Binding TempMin}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <TextBlock Text="Humidity: " />
+                        <TextBlock Text="{Binding Humidity}"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <TextBlock Text="Pressure: "/>
+                        <TextBlock Text="{Binding Pressure}"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </Grid>
+        
+        <!--Second Column-->
+
+        <StackPanel Grid.Column="1" Margin="40 20">
+            <StackPanel.Resources>
+                <Style TargetType="TextBox" x:Key="searchBox">
+                    <Setter Property="Padding" Value="3"/>
+                    <Setter Property="Background" Value="#52ab98"/>
+                    <Setter Property="Opacity" Value=".9"/>
+                    <Setter Property="BorderThickness" Value="0 0 2 2"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TextBox">
+                                <Border CornerRadius="15" Background="{TemplateBinding Background}"
+                                        Padding="{TemplateBinding Padding}"
+                                        Opacity="{TemplateBinding Opacity}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                    <DockPanel Margin="7">
+                                        <Image Source="/Assets/loupe.png" Width="30" DockPanel.Dock="Right"/>
+                                        <ScrollViewer x:Name="PART_ContentHost"
+                                            Focusable="false"
+                                            HorizontalScrollBarVisibility="Hidden"
+                                                      VerticalScrollBarVisibility="Hidden"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Stretch"
+                                                      Foreground="#f2f2f2"
+                                                      FontSize="12"/>
+                                    </DockPanel>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation To="#2b6777" Duration="0:0:0:.5"
+                                                                    Storyboard.TargetProperty="(Border.BorderBrush).Color"/>
+                                        
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation To="{x:Null}" Duration="0:0:0:0.5"
+                                                                    Storyboard.TargetProperty="(Border.BorderBrush).Color"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+                    </Style.Triggers>
+                </Style>
+
+                <Style TargetType="Button" x:Key="searchButton">
+                    <Setter Property="Foreground" Value="#2b6777"/>
+                    <Setter Property="Background" Value="#c8d8e4"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="0 0 2 2"/>
+                    <Setter Property="Margin" Value="0 20"/>
+                    <Setter Property="Padding" Value="20"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="Opacity" Value=".8"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" Margin="{TemplateBinding Margin}" Padding="{TemplateBinding Padding}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8">
+                                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="{TemplateBinding Opacity}"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ColorAnimation To="#2b6777" Duration="0:0:0.5" Storyboard.TargetProperty="(Button.Background).Color"/>
+                                                    <ColorAnimation To="#f2f2f2" Duration="0:0:0.5" Storyboard.TargetProperty="(Button.Foreground).Color"/>
+                                                    <ThicknessAnimation To="20" Storyboard.TargetProperty="(Button.Padding)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+                                        <Trigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ColorAnimation To="{x:Null}" Duration="0:0:0.5" Storyboard.TargetProperty="(Button.Background).Color"/>
+                                                    <ColorAnimation To="{x:Null}" Duration="0:0:0.5" Storyboard.TargetProperty="(Button.Foreground).Color"/>
+                                                    <ThicknessAnimation To="{x:Null}" Storyboard.TargetProperty="(Button.Padding)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.ExitActions>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+            </StackPanel.Resources>
+            <TextBox Style="{StaticResource searchBox}" Foreground="#f2f2f2" FontSize="15" x:Name="searchBox"/>
+            <Button Style="{StaticResource searchButton}" Content="Search" x:Name="searchButton" Click="searchButton_Click" Cursor="Hand"/>
+            
+        </StackPanel>
+        <Grid Grid.Column="1" Margin="30 50 30 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition  Height=".4*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <!--First Column-->
+
+
+
+            <Border CornerRadius="50 0 30 0" Background="#2b6777" Grid.Row="1" Margin="0 0 0 20" Opacity=".9" Grid.ColumnSpan="2">
+                <DockPanel>
+                    <DockPanel.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#f2f2f2"/>
+                            <Setter Property="FontSize" Value="20"/>
+                        </Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Margin" Value="35"/>
+                        </Style>
+                    </DockPanel.Resources>
+
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <TextBlock Text="Wind Type: "/>
+                        <TextBlock Text="{Binding WindType}"/>
+                    </StackPanel>
+
+                    <Grid DockPanel.Dock="Top" Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="6*" />
+                            <RowDefinition Height="4*" />
+                        </Grid.RowDefinitions>
+
+                        <Image Source="/Assets/arrow.png" RenderTransformOrigin="0.519,0.474">
+                            <Image.RenderTransform>
+                                <RotateTransform Angle="{Binding WindDirection, Converter={StaticResource degreeConverter}}"/>
+                            </Image.RenderTransform>
+                        </Image>
+
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="35,35,35,10">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="Foreground" Value="#f2f2f2"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <TextBlock Text="Wind Speed and Direction: "/>
+                            <TextBlock Text="{Binding WindSpeed}"/>
+                            <TextBlock Text="m/s  "/>
+                            <TextBlock Text="{Binding WindDirectionName}"/>
+                        </StackPanel>
+
+                    </Grid>
+                    
+
+                </DockPanel>
+            </Border>
+        </Grid>
+
+    </Grid>
+</Window>
